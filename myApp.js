@@ -8,7 +8,7 @@ mongoose.connect(process.env.MONGO_URI, {
 	useUnifiedTopology: true,
 });
 
-let personSchema = new Schema({
+const personSchema = new Schema({
 	name: { type: String, required: true },
 	age: Number,
 	favoriteFoods: [String],
@@ -18,9 +18,9 @@ let Person = mongoose.model('Person', personSchema);
 
 const createAndSavePerson = (done) => {
 	let luther = new Person({
-		name: "Luther Blissett",
+		name: 'Luther Blissett',
 		age: 23,
-		favoriteFoods: ["pizza", "helado"],
+		favoriteFoods: ['pizza', 'helado'],
 	});
 
 	luther.save((err, data) => {
@@ -29,12 +29,32 @@ const createAndSavePerson = (done) => {
 	});
 };
 
+var arrayOfPeople = [
+	{
+		name: 'Luther Blissett',
+		age: 75,
+		favoriteFoods: ['pizza', 'helado'],
+	},
+	{ name: 'John Difool', age: 39, favoriteFoods: ['soma', 'burger'] },
+	{
+		name: 'Robert Paulson',
+		age: 23,
+		favoriteFoods: ['chili', 'ensaladq', 'tacos'],
+	},
+];
+
 const createManyPeople = (arrayOfPeople, done) => {
-	done(null /*, data*/);
+    Person.create(arrayOfPeople, (err, people) => {
+        if (err) return console.log(err);
+        done(null, people);
+    });
 };
 
 const findPeopleByName = (personName, done) => {
-	done(null /*, data*/);
+	Person.find({name: personName}, (err, personFound) =>{
+        if (err) return console.error(err);
+		done(null, personFound);
+	})
 };
 
 const findOneByFood = (food, done) => {
